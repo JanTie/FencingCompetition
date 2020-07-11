@@ -8,7 +8,7 @@ class Competitor {
   String name;
   int competitionId;
 
-  Competitor(this.id, this.name, this.competitionId);
+  Competitor({this.id, this.name, this.competitionId});
 
   factory Competitor.fromJson(Map<String, dynamic> json) =>
       _$CompetitorFromJson(json);

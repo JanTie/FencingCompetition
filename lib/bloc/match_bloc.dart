@@ -11,42 +11,45 @@ class MatchBloc extends BlocBase {
   int _competitionId;
 
   final StreamController<List<Match>> _unfinishedMatchesController =
-  BehaviorSubject<List<Match>>();
+      BehaviorSubject<List<Match>>();
 
   Stream<List<Match>> get unfinishedMatches =>
       _unfinishedMatchesController.stream.asBroadcastStream();
 
   final StreamController<List<Match>> _finishedMatchesController =
-  BehaviorSubject<List<Match>>();
+      BehaviorSubject<List<Match>>();
 
   Stream<List<Match>> get finishedMatches =>
       _finishedMatchesController.stream.asBroadcastStream();
 
   final StreamController _competitorsController =
-  BehaviorSubject<List<Competitor>>();
+      BehaviorSubject<List<Competitor>>();
 
   Stream<List<Competitor>> get competitors =>
       _competitorsController.stream.asBroadcastStream();
 
-  Stream<MapEntry<List<Competitor>,
-      List<Match>>> get competitorsAndUnfinishedMatches =>
-      CombineLatestStream.combine2(
+  Stream<MapEntry<List<Competitor>, List<Match>>>
+      get competitorsAndUnfinishedMatches => CombineLatestStream.combine2(
           competitors, unfinishedMatches, (a, b) => MapEntry(a, b));
 
   Stream<List<Result>> get results =>
-      CombineLatestStream.combine2(
-          competitors, finishedMatches, (List<Competitor> competitors,
-          List<Match> matches) {
-        if (competitors == null || matches == null || competitors.isEmpty ||
+      CombineLatestStream.combine2(competitors, finishedMatches,
+          (List<Competitor> competitors, List<Match> matches) {
+        if (competitors == null ||
+            matches == null ||
+            competitors.isEmpty ||
             matches.isEmpty) {
-          return competitors.map((competitor) =>
-              Result(competitor.name, 0, 0, 0)).toList();
+          return competitors
+              .map((competitor) => Result(competitor.name, 0, 0, 0))
+              .toList();
         }
 
         final List<Result> results = competitors.map((competitor) {
-          int wins = matches
-              .where((match) => match.winner == competitor.id)
-              .length;
+          ///calculate amount of victories
+          int victories =
+              matches.where((match) => match.winner == competitor.id).length;
+
+          ///calculate points scored by the competitor
           int points = matches.map((match) {
             if (match.winner == competitor.id) {
               return match.winnerPoints;
@@ -57,6 +60,8 @@ class MatchBloc extends BlocBase {
               return 0;
             }
           }).reduce((a, b) => a + b);
+
+          ///calculate points scored against the competitor
           int pointsTaken = matches.map((match) {
             if (match.winner == competitor.id) {
               return match.loserPoints;
@@ -67,7 +72,7 @@ class MatchBloc extends BlocBase {
               return 0;
             }
           }).reduce((a, b) => a + b);
-          return Result(competitor.name, wins, points, pointsTaken);
+          return Result(competitor.name, victories, points, pointsTaken);
         }).toList();
 
         ///sort list according to fencing rules
@@ -91,16 +96,16 @@ class MatchBloc extends BlocBase {
 
   void getMatches() async {
     List<Match> matches =
-    await DBProvider.db.findUnfinishedMatches(_competitionId);
+        await DBProvider.db.findUnfinishedMatches(_competitionId);
     _unfinishedMatchesController.add(matches);
-    List<Match> finishedMatches = await DBProvider.db.findFinishedMatches(
-        _competitionId);
+    List<Match> finishedMatches =
+        await DBProvider.db.findFinishedMatches(_competitionId);
     _finishedMatchesController.add(finishedMatches);
   }
 
   void getCompetitors() async {
     List<Competitor> competitors =
-    await DBProvider.db.findCompetitors(_competitionId);
+        await DBProvider.db.findCompetitors(_competitionId);
     _competitorsController.add(competitors);
   }
 

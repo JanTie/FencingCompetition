@@ -7,20 +7,27 @@ import 'package:fencing_competition/model/competitor.dart';
 import 'package:fencing_competition/model/match.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CompetitionBloc extends BlocBase {
-  final StreamController<List<Competitor>> _competitorController =
-  BehaviorSubject<List<Competitor>>.seeded([]);
+class CompetitionCreationBloc extends BlocBase {
+  final BehaviorSubject<List<Competitor>> _competitorController =
+      BehaviorSubject<List<Competitor>>.seeded([]);
 
-  Stream<List<Competitor>> get competitors => _competitorController.stream.asBroadcastStream();
+  Stream<List<Competitor>> get competitors =>
+      _competitorController.stream.asBroadcastStream();
 
-  Future save(Competition competition) async {
-    final competitors = await _competitorController.stream.single;
+  Future addCompetition(Competition competition) async {
+    final competitors = _competitorController.value;
     await _addCompetition(competition, competitors);
   }
 
-  Future addCompetitor(Competitor competitor)async{
-    final currentCompetitors = await _competitorController.stream.single;
+  Future addCompetitor(Competitor competitor) async {
+    final currentCompetitors = _competitorController.value;
     currentCompetitors.add(competitor);
+    _competitorController.add(currentCompetitors);
+  }
+
+  Future removeCompetitor(Competitor competitor) async {
+    final currentCompetitors = _competitorController.value;
+    currentCompetitors.remove(competitor);
     _competitorController.add(currentCompetitors);
   }
 
@@ -28,10 +35,10 @@ class CompetitionBloc extends BlocBase {
       Competition competition, List<Competitor> competitors) async {
     //insert competition
     final int competitionId =
-    await DBProvider.db.insertCompetition(competition);
+        await DBProvider.db.insertCompetition(competition);
     //insert competitors
     final List<int> competitorIds =
-    await DBProvider.db.insertCompetitors(competitionId, competitors);
+        await DBProvider.db.insertCompetitors(competitionId, competitors);
     //generate matches
     await _generateMatches(competitionId, competitorIds);
   }
@@ -46,12 +53,12 @@ class CompetitionBloc extends BlocBase {
     }
     final List<Match> matches = [];
     for (var rotationIndex = 0;
-    rotationIndex < competitorIds.length - 1;
-    rotationIndex++) {
+        rotationIndex < competitorIds.length - 1;
+        rotationIndex++) {
       print(competitorIds);
       for (var matchIndex = 0;
-      matchIndex < competitorIds.length / 2;
-      matchIndex++) {
+          matchIndex < competitorIds.length / 2;
+          matchIndex++) {
         final home = competitorIds[matchIndex];
         final away = competitorIds[competitorIds.length - 1 - matchIndex];
         //in case one of the competitors is a dummy entry, skip the match

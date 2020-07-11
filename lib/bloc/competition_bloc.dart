@@ -10,7 +10,8 @@ class CompetitionBloc extends BlocBase {
   final StreamController _competitionsController =
       StreamController<List<Competition>>();
 
-  Stream<List<Competition>> get competitions => _competitionsController.stream.asBroadcastStream();
+  Stream<List<Competition>> get competitions =>
+      _competitionsController.stream.asBroadcastStream();
 
   CompetitionBloc() {
     getCompetitions();

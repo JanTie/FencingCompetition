@@ -1,6 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:fencing_competition/app_localizations.dart';
-import 'package:fencing_competition/bloc/competition_bloc.dart';
+import 'package:fencing_competition/bloc/competition_creation_bloc.dart';
 import 'package:fencing_competition/pages/competition_edit_page.dart';
 import 'package:fencing_competition/pages/competition_match_list.dart';
 import 'package:fencing_competition/pages/main_page.dart';
@@ -22,10 +22,9 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       routes: {
-        MainPage.NAVIGATION_KEY: (_) => BlocProvider(
-            blocs: [Bloc((_) => CompetitionBloc())], child: MainPage()),
+        MainPage.NAVIGATION_KEY: (_) => MainPage(),
         CompetitionEditPage.NAVIGATION_KEY: (_) => BlocProvider(
-            blocs: [Bloc((_) => CompetitionBloc())],
+            blocs: [Bloc((_) => CompetitionCreationBloc())],
             child: CompetitionEditPage()),
         CompetitionMatchList.NAVIGATION_KEY: (_) => CompetitionMatchList(),
       },

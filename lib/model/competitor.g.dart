@@ -8,9 +8,9 @@ part of 'competitor.dart';
 
 Competitor _$CompetitorFromJson(Map<String, dynamic> json) {
   return Competitor(
-    json['id'] as int,
-    json['name'] as String,
-    json['competitionId'] as int,
+    id: json['id'] as int,
+    name: json['name'] as String,
+    competitionId: json['competitionId'] as int,
   );
 }
 

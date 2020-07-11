@@ -105,7 +105,7 @@ class _MatchesListState extends State<MatchesList> {
                     ],
                   ),
                   SizedBox(
-                    height: 16,
+                    height: 32,
                   ),
                   RaisedButton(
                     child: Text(AppLocalizations.of(context)
@@ -149,15 +149,15 @@ class _MatchesListState extends State<MatchesList> {
           if (snapshot.hasData) {
             final List<Competitor> competitors = snapshot.data.key;
             final List<Match> matches = snapshot.data.value;
-            if(matches.isNotEmpty) {
+            if (matches.isNotEmpty) {
               return ListView.builder(
                   itemCount: matches.length,
                   itemBuilder: (context, index) {
                     final match = matches[index];
                     final home = competitors.firstWhere(
-                            (element) => element.id == match.homeCompetitor);
+                        (element) => element.id == match.homeCompetitor);
                     final away = competitors.firstWhere(
-                            (element) => element.id == match.awayCompetitor);
+                        (element) => element.id == match.awayCompetitor);
                     return Padding(
                       padding: EdgeInsets.all(16),
                       child: Card(
@@ -171,11 +171,13 @@ class _MatchesListState extends State<MatchesList> {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(home.name),
-                                    Text(AppLocalizations.of(context).translate(
-                                        'matches_list_horizontal_divider'),),
+                                    Text(
+                                      AppLocalizations.of(context).translate(
+                                          'matches_list_horizontal_divider'),
+                                    ),
                                     Text(away.name),
                                   ],
                                 ),
@@ -190,8 +192,10 @@ class _MatchesListState extends State<MatchesList> {
               return Padding(
                 padding: EdgeInsets.all(32),
                 child: Center(
-                  child: Text(AppLocalizations.of(context).translate(
-                      'matches_list_empty_state'),),
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .translate('matches_list_empty_state'),
+                  ),
                 ),
               );
             }

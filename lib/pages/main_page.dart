@@ -14,60 +14,65 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final bloc = CompetitionBloc();
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate('app_title')),
-      ),
-      body: StreamBuilder<List<Competition>>(
-        stream: BlocProvider.getBloc<CompetitionBloc>().competitions,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final competitions = snapshot.data;
-            if (competitions.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24),
-                  child: Text(AppLocalizations.of(context)
-                      .translate('competitions_empty_state')),
-                ),
-              );
-            } else {
-              return ListView.builder(
-                  itemCount: competitions.length,
-                  itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Card(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, CompetitionMatchList.NAVIGATION_KEY,
-                                  arguments: competitions[index]);
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Text(competitions[index].name),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context).translate('app_title')),
+        ),
+        body: StreamBuilder<List<Competition>>(
+          stream: bloc.competitions,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final competitions = snapshot.data;
+              if (competitions.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('competitions_empty_state')),
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                    itemCount: competitions.length,
+                    itemBuilder: (context, index) => Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Card(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(context,
+                                    CompetitionMatchList.NAVIGATION_KEY,
+                                    arguments: competitions[index]);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text(competitions[index].name),
+                              ),
                             ),
                           ),
-                        ),
-                      ));
+                        ));
+              }
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            Navigator.pushNamed(context, CompetitionEditPage.NAVIGATION_KEY)
-                .then((value) {
-              BlocProvider.getBloc<CompetitionBloc>().getCompetitions();
-            });
-          }),
-    );
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () async {
+              await Navigator.pushNamed(
+                  context, CompetitionEditPage.NAVIGATION_KEY);
+              bloc.getCompetitions();
+            }),
+      );
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
   }
 }
