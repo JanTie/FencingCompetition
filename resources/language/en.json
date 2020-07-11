@@ -1,0 +1,11 @@
+{
+  "app_title": "Fencing Tournament Manager",
+  "competitions_empty_state": "You don't have any competitions yet. Click the 'add' button to create your first competition.",
+  "competition_editor_new_title": "new Competition",
+  "competition_editor_name_input_description": "Competition name",
+  "competition_editor_competitor_name_input_description": "Competitor name",
+  "competition_editor_save": "Save competition",
+  "competition_editor_competitor_empty_state": "Add some Competitors",
+  "matches_tab_matches": "Matches",
+  "matches_tab_results": "Results"
+}
