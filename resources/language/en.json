@@ -8,5 +8,15 @@
   "competition_editor_competitor_empty_state": "Add some Competitors",
   "matches_tab_matches": "Matches",
   "matches_tab_results": "Results",
-  "matches_result_save": "Save"
+  "matches_result_dialog_save": "Save",
+  "matches_result_dialog_points": "Points",
+  "matches_result_dialog_title": "Enter a result",
+  "matches_result_dialog_error_snackbar": "You must enter Numbers into both fields",
+  "matches_list_horizontal_divider": "vs.",
+  "matches_list_empty_state": "This competition has no more matches. See the results tab in order to see the results.",
+  "matches_result_table_name": "Name",
+  "matches_result_table_wins": "V",
+  "matches_result_table_points": "TD",
+  "matches_result_table_points_retrieved": "TR",
+  "matches_result_table_points_difference": "Diff"
 }

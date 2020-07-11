@@ -1,10 +1,11 @@
 class Result {
-  final int competitorId;
+  final String competitorName;
   final int victoryCount;
-  final int pointIndex;
   final int points;
   final int pointsTaken;
 
-  Result(this.competitorId, this.victoryCount, this.pointIndex, this.points,
+  int get pointIndex  => points - pointsTaken;
+
+  Result(this.competitorName, this.victoryCount, this.points,
       this.pointsTaken);
 }

@@ -5,35 +5,35 @@ import 'package:fencing_competition/db_provider.dart';
 import 'package:fencing_competition/model/competition.dart';
 import 'package:fencing_competition/model/competitor.dart';
 import 'package:fencing_competition/model/match.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CompetitionBloc extends BlocBase {
-  final StreamController _competitionsController =
-      StreamController<List<Competition>>();
+  final StreamController<List<Competitor>> _competitorController =
+  BehaviorSubject<List<Competitor>>.seeded([]);
 
-  Stream<List<Competition>> get competitions => _competitionsController.stream.asBroadcastStream();
+  Stream<List<Competitor>> get competitors => _competitorController.stream.asBroadcastStream();
 
-  CompetitionBloc() {
-    getCompetitions();
+  Future save(Competition competition) async {
+    final competitors = await _competitorController.stream.single;
+    await _addCompetition(competition, competitors);
   }
 
-  void getCompetitions() async {
-    List<Competition> competitions = await DBProvider.db.findCompetitions();
-    _competitionsController.add(competitions);
+  Future addCompetitor(Competitor competitor)async{
+    final currentCompetitors = await _competitorController.stream.single;
+    currentCompetitors.add(competitor);
+    _competitorController.add(currentCompetitors);
   }
 
-  Future addCompetition(
+  Future _addCompetition(
       Competition competition, List<Competitor> competitors) async {
     //insert competition
     final int competitionId =
-        await DBProvider.db.insertCompetition(competition);
+    await DBProvider.db.insertCompetition(competition);
     //insert competitors
     final List<int> competitorIds =
-        await DBProvider.db.insertCompetitors(competitionId, competitors);
+    await DBProvider.db.insertCompetitors(competitionId, competitors);
     //generate matches
     await _generateMatches(competitionId, competitorIds);
-
-    //reload competitions
-    getCompetitions();
   }
 
   ///generates the matches for the given competition and its competitors
@@ -46,12 +46,12 @@ class CompetitionBloc extends BlocBase {
     }
     final List<Match> matches = [];
     for (var rotationIndex = 0;
-        rotationIndex < competitorIds.length - 1;
-        rotationIndex++) {
+    rotationIndex < competitorIds.length - 1;
+    rotationIndex++) {
       print(competitorIds);
       for (var matchIndex = 0;
-          matchIndex < competitorIds.length / 2;
-          matchIndex++) {
+      matchIndex < competitorIds.length / 2;
+      matchIndex++) {
         final home = competitorIds[matchIndex];
         final away = competitorIds[competitorIds.length - 1 - matchIndex];
         //in case one of the competitors is a dummy entry, skip the match
@@ -81,7 +81,7 @@ class CompetitionBloc extends BlocBase {
 
   @override
   void dispose() {
-    _competitionsController.close();
+    _competitorController.close();
     super.dispose();
   }
 }
