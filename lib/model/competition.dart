@@ -8,6 +8,9 @@ class Competition {
   String name;
 
   Competition(this.id, this.name);
-  factory Competition.fromJson(Map<String, dynamic> json) => _$CompetitionFromJson(json);
+
+  factory Competition.fromJson(Map<String, dynamic> json) =>
+      _$CompetitionFromJson(json);
+
   Map<String, dynamic> toJson() => _$CompetitionToJson(this);
 }

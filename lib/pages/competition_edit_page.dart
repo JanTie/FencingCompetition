@@ -49,11 +49,11 @@ class _CompetitionEditPageState extends State<CompetitionEditPage> {
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                   icon: Icon(Icons.add),
-                  onPressed: (){
+                  onPressed: () {
                     setState(() {
                       _nameController.text = this._nameController.text;
-                      competitors.add(
-                          Competitor(null, _competitorNameController.text, null));
+                      competitors.add(Competitor(
+                          null, _competitorNameController.text, null));
                     });
                     _competitorNameController.text = "";
                   },
@@ -67,27 +67,27 @@ class _CompetitionEditPageState extends State<CompetitionEditPage> {
             Expanded(
               child: competitors.length == 0
                   ? Text(AppLocalizations.of(context)
-                  .translate('competition_editor_competitor_empty_state'))
+                      .translate('competition_editor_competitor_empty_state'))
                   : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: competitors.length,
-                  itemBuilder: (context, index) {
-                    return Dismissible(
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Card(
+                      shrinkWrap: true,
+                      itemCount: competitors.length,
+                      itemBuilder: (context, index) {
+                        return Dismissible(
                           child: Padding(
                             padding: EdgeInsets.all(16),
-                            child: Text(competitors[index].name),
+                            child: Card(
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text(competitors[index].name),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      key: Key(competitors[index].hashCode.toString()),
-                      onDismissed: (direction) {
-                        competitors.removeAt(index);
-                      },
-                    );
-                  }),
+                          key: Key(competitors[index].hashCode.toString()),
+                          onDismissed: (direction) {
+                            competitors.removeAt(index);
+                          },
+                        );
+                      }),
             ),
           ],
         ),
@@ -96,8 +96,10 @@ class _CompetitionEditPageState extends State<CompetitionEditPage> {
         onPressed: () {
           currentCompetition.name = _nameController.text;
           BlocProvider.getBloc<CompetitionBloc>()
-              .addCompetition(currentCompetition, this.competitors);
-          Navigator.pop(context);
+              .addCompetition(currentCompetition, this.competitors)
+              .then((value) {
+            Navigator.pop(context);
+          });
         },
         label: Text(
           AppLocalizations.of(context).translate('competition_editor_save'),

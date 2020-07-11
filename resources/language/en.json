@@ -7,5 +7,6 @@
   "competition_editor_save": "Save competition",
   "competition_editor_competitor_empty_state": "Add some Competitors",
   "matches_tab_matches": "Matches",
-  "matches_tab_results": "Results"
+  "matches_tab_results": "Results",
+  "matches_result_save": "Save"
 }

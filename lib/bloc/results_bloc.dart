@@ -5,31 +5,25 @@ import 'package:fencing_competition/db_provider.dart';
 import 'package:fencing_competition/model/competitor.dart';
 import 'package:fencing_competition/model/match.dart';
 
-class MatchBloc extends BlocBase {
+class ResultsBloc extends BlocBase {
   int _competitionId;
 
-  final StreamController<List<Match>> _matchesController =
-      StreamController<List<Match>>();
+  final StreamController _matchesController = StreamController<List<Match>>();
 
-  Stream<List<Match>> get matches => _matchesController.stream;
-
-  Stream get results => _matchesController.stream.map((event) {
-        return event.where((element) => element.winner != null);
-      });
+  Stream<List<Match>> get results => _matchesController.stream;
 
   final StreamController _competitorsController =
       StreamController<List<Competitor>>();
 
   Stream<List<Competitor>> get competitors => _competitorsController.stream;
 
-  MatchBloc(this._competitionId) {
+  ResultsBloc(this._competitionId) {
     getMatches();
     getCompetitors();
   }
 
   void getMatches() async {
-    List<Match> matches =
-        await DBProvider.db.findUnfinishedMatches(_competitionId);
+    List<Match> matches = await DBProvider.db.findMatches(_competitionId);
     _matchesController.add(matches);
   }
 
@@ -37,11 +31,6 @@ class MatchBloc extends BlocBase {
     List<Competitor> competitors =
         await DBProvider.db.findCompetitors(_competitionId);
     _competitorsController.add(competitors);
-  }
-
-  void updateMatch(Match match) async {
-    await DBProvider.db.insertMatch(match);
-    getMatches();
   }
 
   @override

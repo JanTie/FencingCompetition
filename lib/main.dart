@@ -15,44 +15,44 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      blocs: [Bloc((_) => CompetitionBloc())],
-      child: MaterialApp(
-        title: 'Fencing Tournament Manager',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        routes: {
-          MainPage.NAVIGATION_KEY: (_) => MainPage(),
-          CompetitionEditPage.NAVIGATION_KEY: (_) => CompetitionEditPage(),
-          CompetitionMatchList.NAVIGATION_KEY: (_) => CompetitionMatchList(),
-        },
-        initialRoute: MainPage.NAVIGATION_KEY,
-        localizationsDelegates: [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale('en'),
-          //const Locale('de', ''),
-          // ... other locales the app supports
-        ],
-        localeResolutionCallback: (locale, supportedLocales) {
-          // Check if the current device locale is supported
-          for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale.languageCode &&
-                supportedLocale.countryCode == locale.countryCode) {
-              return supportedLocale;
-            }
-          }
-          // If the locale of the device is not supported, use the first one
-          // from the list (English, in this case).
-          return supportedLocales.first;
-        },
+    return MaterialApp(
+      title: 'Fencing Tournament Manager',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      routes: {
+        MainPage.NAVIGATION_KEY: (_) => BlocProvider(
+            blocs: [Bloc((_) => CompetitionBloc())], child: MainPage()),
+        CompetitionEditPage.NAVIGATION_KEY: (_) => BlocProvider(
+            blocs: [Bloc((_) => CompetitionBloc())],
+            child: CompetitionEditPage()),
+        CompetitionMatchList.NAVIGATION_KEY: (_) => CompetitionMatchList(),
+      },
+      initialRoute: MainPage.NAVIGATION_KEY,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en'),
+        //const Locale('de', ''),
+        // ... other locales the app supports
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        // Check if the current device locale is supported
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
+            return supportedLocale;
+          }
+        }
+        // If the locale of the device is not supported, use the first one
+        // from the list (English, in this case).
+        return supportedLocales.first;
+      },
     );
   }
 }

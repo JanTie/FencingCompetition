@@ -1,9 +1,10 @@
 import 'dart:io';
+
 import 'package:fencing_competition/model/competition.dart';
 import 'package:fencing_competition/model/competitor.dart';
 import 'package:fencing_competition/model/match.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBProvider {
@@ -80,8 +81,7 @@ class DBProvider {
     return res.isNotEmpty ? Competition.fromJson(res.first) : null;
   }
 
-  Future<int> insertCompetition(
-      Competition competition) async {
+  Future<int> insertCompetition(Competition competition) async {
     final db = await database;
     var competitionRes = await db.insert('competition', competition.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
@@ -92,7 +92,8 @@ class DBProvider {
 
   Future<Competitor> findCompetitor(int competitorId) async {
     final db = await database;
-    var res = await db.query('competitor', where: 'id = ?', whereArgs: [competitorId]);
+    var res = await db
+        .query('competitor', where: 'id = ?', whereArgs: [competitorId]);
 
     return res.isNotEmpty ? Competitor.fromJson(res.first) : null;
   }
@@ -114,7 +115,8 @@ class DBProvider {
     return res;
   }
 
-  Future<List<int>> insertCompetitors(int competitionId, List<Competitor> competitors)async{
+  Future<List<int>> insertCompetitors(
+      int competitionId, List<Competitor> competitors) async {
     //add competitors for competition
     final competitorIds = await Future.wait(competitors.map((competitor) async {
       competitor.competitionId = competitionId;
@@ -131,7 +133,7 @@ class DBProvider {
     }));
     return matchIds;
   }
-  
+
   Future<int> insertMatch(Match match) async {
     final db = await database;
     var res = await db.insert('match', match.toJson(),
@@ -143,6 +145,28 @@ class DBProvider {
     final db = await database;
     var res = await db
         .query('match', where: 'competitionId = ?', whereArgs: [competitionId]);
+    List<Match> matches = res.isNotEmpty
+        ? res.map((match) => Match.fromJson(match)).toList()
+        : [];
+    return matches;
+  }
+
+  Future<List<Match>> findUnfinishedMatches(int competitionId) async {
+    final db = await database;
+    var res = await db.query('match',
+        where: 'competitionId = ? AND winner is NULL',
+        whereArgs: [competitionId]);
+    List<Match> matches = res.isNotEmpty
+        ? res.map((match) => Match.fromJson(match)).toList()
+        : [];
+    return matches;
+  }
+
+  Future<List<Match>> findFinishedMatches(int competitionId) async {
+    final db = await database;
+    var res = await db.query('match',
+        where: 'competitionId = ? AND winner IS NOT NULL',
+        whereArgs: [competitionId]);
     List<Match> matches = res.isNotEmpty
         ? res.map((match) => Match.fromJson(match)).toList()
         : [];

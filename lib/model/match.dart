@@ -22,5 +22,6 @@ class Match {
       this.loserPoints});
 
   factory Match.fromJson(Map<String, dynamic> json) => _$MatchFromJson(json);
+
   Map<String, dynamic> toJson() => _$MatchToJson(this);
 }

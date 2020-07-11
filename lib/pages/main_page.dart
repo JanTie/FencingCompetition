@@ -1,7 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:fencing_competition/app_localizations.dart';
 import 'package:fencing_competition/bloc/competition_bloc.dart';
-import 'package:fencing_competition/db_provider.dart';
 import 'package:fencing_competition/model/competition.dart';
 import 'package:fencing_competition/pages/competition_edit_page.dart';
 import 'package:fencing_competition/pages/competition_match_list.dart';
@@ -17,14 +16,12 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.getBloc<CompetitionBloc>();
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate('app_title')),
       ),
       body: StreamBuilder<List<Competition>>(
-        stream:
-        bloc.competitions,
+        stream: BlocProvider.getBloc<CompetitionBloc>().competitions,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final competitions = snapshot.data;
@@ -39,13 +36,14 @@ class _MainPageState extends State<MainPage> {
             } else {
               return ListView.builder(
                   itemCount: competitions.length,
-                  itemBuilder: (context, index) =>
-                      Padding(
+                  itemBuilder: (context, index) => Padding(
                         padding: EdgeInsets.all(16),
                         child: Card(
                           child: InkWell(
                             onTap: () {
-                              Navigator.pushNamed(context, CompetitionMatchList.NAVIGATION_KEY, arguments: competitions[index]);
+                              Navigator.pushNamed(
+                                  context, CompetitionMatchList.NAVIGATION_KEY,
+                                  arguments: competitions[index]);
                             },
                             child: Padding(
                               padding: EdgeInsets.all(16),
@@ -65,7 +63,10 @@ class _MainPageState extends State<MainPage> {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
-            Navigator.pushNamed(context, CompetitionEditPage.NAVIGATION_KEY).then((value) => bloc.getCompetitions());
+            Navigator.pushNamed(context, CompetitionEditPage.NAVIGATION_KEY)
+                .then((value) {
+              BlocProvider.getBloc<CompetitionBloc>().getCompetitions();
+            });
           }),
     );
   }
