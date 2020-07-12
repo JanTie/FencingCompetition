@@ -14,7 +14,6 @@ class CompetitionMatchList extends StatefulWidget {
 }
 
 class _CompetitionMatchListState extends State<CompetitionMatchList> {
-
   @override
   Widget build(BuildContext context) {
     final Competition competition = ModalRoute.of(context).settings.arguments;
@@ -55,17 +54,16 @@ class _CompetitionMatchListState extends State<CompetitionMatchList> {
     );
   }
 
-  void _onDeletePressed(BuildContext context) async{
+  void _onDeletePressed(BuildContext context) async {
     //if the user decides to delete the competition in the dialog, pop this page
-    if(await _showDeletionDialog(context)){
+    if (await _showDeletionDialog(context)) {
       Navigator.pop(context);
     }
   }
 
-  Future<bool> _showDeletionDialog(BuildContext context) =>
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
+  Future<bool> _showDeletionDialog(BuildContext context) => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
             title: Text(
               AppLocalizations.of(context)
                   .translate('matches_delete_dialog_title'),
@@ -79,9 +77,7 @@ class _CompetitionMatchListState extends State<CompetitionMatchList> {
                 child: Text(
                   AppLocalizations.of(context)
                       .translate('matches_delete_dialog_action_negative'),
-                  style: TextStyle(
-                      color: Colors.redAccent
-                  ),
+                  style: TextStyle(color: Colors.redAccent),
                 ),
                 onPressed: () {
                   BlocProvider.getBloc<MatchBloc>().deleteCompetition();

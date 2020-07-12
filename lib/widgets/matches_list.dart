@@ -47,7 +47,7 @@ class _MatchesListState extends State<MatchesList> {
       match
         ..winnerPoints = max(homeScore, awayScore)
         ..loserPoints = min(homeScore, awayScore)
-      //TODO add priority
+        //TODO add priority
         ..winner = homeScore >= awayScore ? homeCompetitorId : awayCompetitorId;
       BlocProvider.getBloc<MatchBloc>().updateMatch(match);
       Navigator.pop(context);
@@ -63,108 +63,107 @@ class _MatchesListState extends State<MatchesList> {
     }
   }
 
-  void _buildResultInputDialog(
-      BuildContext context, Match match, Competitor home, Competitor away) =>
-    showDialog(
-        context: context,
-        builder: (context) {
-          _homeController.text = "";
-          _awayController.text = "";
-          return AlertDialog(
-            title: Text(AppLocalizations.of(context)
-                .translate('matches_result_dialog_title')),
-            content: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText:
-                      "${home.name} ${AppLocalizations.of(context).translate('matches_result_dialog_points')}",
-                    ),
-                    controller: _homeController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText:
-                      "${away.name} ${AppLocalizations.of(context).translate('matches_result_dialog_points')}",
-                    ),
-                    controller: _awayController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                  ),
-                  SizedBox(
-                    height: 32,
-                  ),
-                  RaisedButton(
-                    child: Text(AppLocalizations.of(context)
-                        .translate('matches_result_dialog_save')),
-                    onPressed: () =>
-                        _onSaveMatchResultPressed(match, home.id, away.id),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-
-  Widget _buildMatchList(List<Match> matches, List<Competitor> competitors) => ListView.builder(
-      itemCount: matches.length,
-      itemBuilder: (context, index) {
-        final match = matches[index];
-        final home = competitors.firstWhere(
-                (element) => element.id == match.homeCompetitor);
-        final away = competitors.firstWhere(
-                (element) => element.id == match.awayCompetitor);
-        return Padding(
-          padding: EdgeInsets.all(16),
-          child: Card(
-            child: InkWell(
-              onTap: () => _buildResultInputDialog(
-                  context, match, home, away),
-              child: Padding(
+  void _buildResultInputDialog(BuildContext context, Match match,
+          Competitor home, Competitor away) =>
+      showDialog(
+          context: context,
+          builder: (context) {
+            _homeController.text = "";
+            _awayController.text = "";
+            return AlertDialog(
+              title: Text(AppLocalizations.of(context)
+                  .translate('matches_result_dialog_title')),
+              content: Padding(
                 padding: EdgeInsets.all(16),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(home.name),
-                        Text(
-                          AppLocalizations.of(context).translate(
-                              'matches_list_horizontal_divider'),
-                        ),
-                        Text(away.name),
+                    TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText:
+                            "${home.name} ${AppLocalizations.of(context).translate('matches_result_dialog_points')}",
+                      ),
+                      controller: _homeController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
                       ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText:
+                            "${away.name} ${AppLocalizations.of(context).translate('matches_result_dialog_points')}",
+                      ),
+                      controller: _awayController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly
+                      ],
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    RaisedButton(
+                      child: Text(AppLocalizations.of(context)
+                          .translate('matches_result_dialog_save')),
+                      onPressed: () =>
+                          _onSaveMatchResultPressed(match, home.id, away.id),
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-        );
-      });
+            );
+          });
+
+  Widget _buildMatchList(List<Match> matches, List<Competitor> competitors) =>
+      ListView.builder(
+          itemCount: matches.length,
+          itemBuilder: (context, index) {
+            final match = matches[index];
+            final home = competitors
+                .firstWhere((element) => element.id == match.homeCompetitor);
+            final away = competitors
+                .firstWhere((element) => element.id == match.awayCompetitor);
+            return Padding(
+              padding: EdgeInsets.all(16),
+              child: Card(
+                child: InkWell(
+                  onTap: () =>
+                      _buildResultInputDialog(context, match, home, away),
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(home.name),
+                            Text(
+                              AppLocalizations.of(context)
+                                  .translate('matches_list_horizontal_divider'),
+                            ),
+                            Text(away.name),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          });
 
   Widget _buildEmptyState() => Padding(
-    padding: EdgeInsets.all(32),
-    child: Center(
-      child: Text(
-        AppLocalizations.of(context)
-            .translate('matches_list_empty_state'),
-      ),
-    ),
-  );
+        padding: EdgeInsets.all(32),
+        child: Center(
+          child: Text(
+            AppLocalizations.of(context).translate('matches_list_empty_state'),
+          ),
+        ),
+      );
 }

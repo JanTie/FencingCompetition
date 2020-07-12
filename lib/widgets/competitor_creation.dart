@@ -39,7 +39,8 @@ class _CompetitorCreationWidgetState extends State<CompetitorCreationWidget> {
         decoration: InputDecoration(
           suffixIcon: IconButton(
             icon: Icon(Icons.add),
-            onPressed: () => _onAddCompetitorPressed(_competitorNameController.text),
+            onPressed: () =>
+                _onAddCompetitorPressed(_competitorNameController.text),
           ),
           border: InputBorder.none,
           labelText: AppLocalizations.of(context).translate(
@@ -50,21 +51,20 @@ class _CompetitorCreationWidgetState extends State<CompetitorCreationWidget> {
       );
 
   Widget _buildCompetitorList() => Expanded(
-    child: StreamBuilder<List<Competitor>>(
-      stream:
-      BlocProvider.getBloc<CompetitionCreationBloc>().competitors,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final List<Competitor> competitors = snapshot.data;
-          return _buildList(competitors);
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    ),
-  );
+        child: StreamBuilder<List<Competitor>>(
+          stream: BlocProvider.getBloc<CompetitionCreationBloc>().competitors,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final List<Competitor> competitors = snapshot.data;
+              return _buildList(competitors);
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
+      );
 
   Widget _buildList(List<Competitor> competitors) => competitors.length == 0
       ? Text(AppLocalizations.of(context)

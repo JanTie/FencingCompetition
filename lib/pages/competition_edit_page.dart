@@ -2,7 +2,6 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:fencing_competition/app_localizations.dart';
 import 'package:fencing_competition/bloc/competition_creation_bloc.dart';
 import 'package:fencing_competition/model/competition.dart';
-import 'package:fencing_competition/model/competitor.dart';
 import 'package:fencing_competition/widgets/competitor_creation.dart';
 import 'package:flutter/material.dart';
 
@@ -67,7 +66,7 @@ class _CompetitionEditPageState extends State<CompetitionEditPage> {
     super.dispose();
   }
 
-  void _onSaveButtonPressed(Competition competition){
+  void _onSaveButtonPressed(Competition competition) {
     competition.name = _nameController.text;
     BlocProvider.getBloc<CompetitionCreationBloc>()
         .addCompetition(competition)

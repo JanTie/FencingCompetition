@@ -114,7 +114,7 @@ class MatchBloc extends BlocBase {
     getMatches();
   }
 
-  void deleteCompetition() async{
+  void deleteCompetition() async {
     await DBProvider.db.deleteCompetition(this._competitionId);
   }
 

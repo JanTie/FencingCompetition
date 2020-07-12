@@ -62,32 +62,31 @@ class _MainPageState extends State<MainPage> {
     bloc.getCompetitions();
   }
 
-  void _onAddFabPressed() async{
-    await Navigator.pushNamed(
-        context, CompetitionEditPage.NAVIGATION_KEY);
+  void _onAddFabPressed() async {
+    await Navigator.pushNamed(context, CompetitionEditPage.NAVIGATION_KEY);
     bloc.getCompetitions();
   }
 
   Widget _buildEmptyState() => Center(
-    child: Padding(
-      padding: EdgeInsets.all(24),
-      child: Text(AppLocalizations.of(context)
-          .translate('competitions_empty_state')),
-    ),
-  );
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Text(AppLocalizations.of(context)
+              .translate('competitions_empty_state')),
+        ),
+      );
 
   Widget _buildList(List<Competition> competitions) => ListView.builder(
       itemCount: competitions.length,
       itemBuilder: (context, index) => Padding(
-        padding: EdgeInsets.all(16),
-        child: Card(
-          child: InkWell(
-            onTap: () => _onItemTap(competitions[index]),
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(competitions[index].name),
+            padding: EdgeInsets.all(16),
+            child: Card(
+              child: InkWell(
+                onTap: () => _onItemTap(competitions[index]),
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(competitions[index].name),
+                ),
+              ),
             ),
-          ),
-        ),
-      ));
+          ));
 }

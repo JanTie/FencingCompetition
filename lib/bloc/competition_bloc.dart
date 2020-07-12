@@ -3,13 +3,11 @@ import 'dart:async';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:fencing_competition/db_provider.dart';
 import 'package:fencing_competition/model/competition.dart';
-import 'package:fencing_competition/model/competitor.dart';
-import 'package:fencing_competition/model/match.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CompetitionBloc extends BlocBase {
   final StreamController _competitionsController =
-    BehaviorSubject<List<Competition>>();
+      BehaviorSubject<List<Competition>>();
 
   Stream<List<Competition>> get competitions =>
       _competitionsController.stream.asBroadcastStream();

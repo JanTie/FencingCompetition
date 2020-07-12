@@ -90,7 +90,8 @@ class DBProvider {
 
   Future<int> deleteCompetition(int competitionId) async {
     final db = await database;
-    final res = await db.delete('competition', where: 'id = ?', whereArgs: [competitionId]);
+    final res = await db
+        .delete('competition', where: 'id = ?', whereArgs: [competitionId]);
     return res;
   }
 
