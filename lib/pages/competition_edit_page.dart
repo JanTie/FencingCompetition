@@ -3,6 +3,7 @@ import 'package:fencing_competition/app_localizations.dart';
 import 'package:fencing_competition/bloc/competition_creation_bloc.dart';
 import 'package:fencing_competition/model/competition.dart';
 import 'package:fencing_competition/model/competitor.dart';
+import 'package:fencing_competition/widgets/competitor_creation.dart';
 import 'package:flutter/material.dart';
 
 class CompetitionEditPage extends StatefulWidget {
@@ -23,7 +24,9 @@ class _CompetitionEditPageState extends State<CompetitionEditPage> {
                 null,
                 AppLocalizations.of(context)
                     .translate('competition_editor_new_title'));
+
     _nameController.text = currentCompetition.name;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(currentCompetition.name),
@@ -43,19 +46,14 @@ class _CompetitionEditPageState extends State<CompetitionEditPage> {
             SizedBox(
               height: 16,
             ),
-            CompetitorCreationWidget(),
+            Expanded(
+              child: CompetitorCreationWidget(),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          currentCompetition.name = _nameController.text;
-          BlocProvider.getBloc<CompetitionCreationBloc>()
-              .addCompetition(currentCompetition)
-              .then((value) {
-            Navigator.pop(context);
-          });
-        },
+        onPressed: () => _onSaveButtonPressed(currentCompetition),
         label: Text(
           AppLocalizations.of(context).translate('competition_editor_save'),
         ),
@@ -68,78 +66,13 @@ class _CompetitionEditPageState extends State<CompetitionEditPage> {
     _nameController.dispose();
     super.dispose();
   }
-}
 
-class CompetitorCreationWidget extends StatefulWidget {
-  @override
-  State createState() => _CompetitorCreationWidgetState();
-}
-
-class _CompetitorCreationWidgetState extends State<CompetitorCreationWidget> {
-  final _competitorNameController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          TextField(
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  BlocProvider.getBloc<CompetitionCreationBloc>().addCompetitor(
-                    Competitor(name: _competitorNameController.text),
-                  );
-                  _competitorNameController.text = "";
-                },
-              ),
-              border: InputBorder.none,
-              labelText: AppLocalizations.of(context).translate(
-                  'competition_editor_competitor_name_input_description'),
-            ),
-            controller: _competitorNameController,
-          ),
-          StreamBuilder<List<Competitor>>(
-            stream: BlocProvider.getBloc<CompetitionCreationBloc>().competitors,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final List<Competitor> competitors = snapshot.data;
-                return competitors.length == 0
-                    ? Text(AppLocalizations.of(context)
-                        .translate('competition_editor_competitor_empty_state'))
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: competitors.length,
-                        itemBuilder: (context, index) {
-                          return Dismissible(
-                            child: Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Text(competitors[index].name),
-                                ),
-                              ),
-                            ),
-                            key: Key(competitors[index].hashCode.toString()),
-                            onDismissed: (direction) {
-                              BlocProvider.getBloc<CompetitionCreationBloc>()
-                                  .removeCompetitor(competitors[index]);
-                            },
-                          );
-                        });
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
-        ],
-      );
-
-  @override
-  void dispose() {
-    _competitorNameController.dispose();
-    super.dispose();
+  void _onSaveButtonPressed(Competition competition){
+    competition.name = _nameController.text;
+    BlocProvider.getBloc<CompetitionCreationBloc>()
+        .addCompetition(competition)
+        .then((value) {
+      Navigator.pop(context);
+    });
   }
 }

@@ -88,6 +88,12 @@ class DBProvider {
     return competitionRes;
   }
 
+  Future<int> deleteCompetition(int competitionId) async {
+    final db = await database;
+    final res = await db.delete('competition', where: 'id = ?', whereArgs: [competitionId]);
+    return res;
+  }
+
   ///CRUD - Competitors
 
   Future<Competitor> findCompetitor(int competitorId) async {

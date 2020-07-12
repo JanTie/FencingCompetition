@@ -114,6 +114,10 @@ class MatchBloc extends BlocBase {
     getMatches();
   }
 
+  void deleteCompetition() async{
+    await DBProvider.db.deleteCompetition(this._competitionId);
+  }
+
   @override
   void dispose() {
     _unfinishedMatchesController.close();
