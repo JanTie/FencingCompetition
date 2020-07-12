@@ -1,6 +1,6 @@
 # fencing_competition
 
-A Competition Management Tool
+A Competition Management Tool, primarily for fencing
 
 ### Goals
 
